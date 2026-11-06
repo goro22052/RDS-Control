@@ -149,11 +149,12 @@ namespace RDSNative
             IntPtr hServer, int Reserved, int Version,
             out IntPtr ppSessionInfo, out int pCount);
 
-        [DllImport("wtsapi32.dll", SetLastError = true)]
-        static extern bool WTSQuerySessionInformation(
-            IntPtr hServer, int sessionId, int infoClass,
-            out IntPtr ppBuffer, out int pBytesReturned);
-
+		[DllImport("wtsapi32.dll", SetLastError = true,
+		CharSet = CharSet.Unicode, EntryPoint = "WTSQuerySessionInformationW")]
+		static extern bool WTSQuerySessionInformation(
+		IntPtr hServer, int sessionId, int infoClass,
+		out IntPtr ppBuffer, out int pBytesReturned);
+	
         [DllImport("wtsapi32.dll")]
         static extern void WTSFreeMemory(IntPtr pMemory);
 
@@ -204,7 +205,7 @@ namespace RDSNative
                     {
                         int infoSize = Marshal.SizeOf(typeof(WTSINFO));
 
-                        if (pInfo == IntPtr.Zero || bytes < infoSize)
+                        if (pInfo == IntPtr.Zero )
                             continue;
 
                         WTSINFO info = (WTSINFO)Marshal.PtrToStructure(
